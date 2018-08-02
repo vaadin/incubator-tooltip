@@ -9,7 +9,9 @@
     <h3>Demo sample</h3>
     <vaadin-demo-snippet id="vaadin-tooltip-demo-sample">
       <template preserve-content>
-        <vaadin-tooltip>
+        <h1 id="to-be-tooltiped">This is a test title with tooltip</h1>
+        <vaadin-tooltip id="my-tooltip" for="to-be-tooltiped">
+          Some descriptive text about this header.
         </vaadin-tooltip>
       </template>
     </vaadin-demo-snippet>

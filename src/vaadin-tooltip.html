@@ -13,9 +13,27 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 <dom-module id="vaadin-tooltip">
   <template>
     <style>
+      :host {
+        display: block;
+        position: absolute;
+        outline: none;
+        z-index: 1000;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      #tooltip {
+        padding: 10px;
+        border: 1px solid;
+        border-radius: 5px;
+      }
     </style>
 
-    <h1>Hello World!</h1>
+    <div id="tooltip" class="hidden">
+      <slot></slot>
+    </div>
   </template>
 
   <script>
@@ -34,6 +52,47 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       class VaadinTooltip extends Vaadin.ElementMixin(Vaadin.ThemableMixin(Polymer.Element)) {
         static get is() {
           return 'vaadin-tooltip';
+        }
+
+        static get properties() {
+          return {
+            /**
+             * The text content of the tooltip
+             */
+            for: {
+              type: String,
+              observer: '_attachToTarget'
+            }
+          };
+        }
+
+        _attachToTarget() {
+          const target = this.target();
+
+          if (target) {
+            target.addEventListener('mouseenter', this.show.bind(this));
+            target.addEventListener('focus', this.show.bind(this));
+            target.addEventListener('mouseleave', this.hide.bind(this));
+            target.addEventListener('blur', this.hide.bind(this));
+            target.addEventListener('tap', this.hide.bind(this));
+          }
+        }
+
+        show() {
+          this.$.tooltip.classList.remove('hidden');
+
+          //TODO: This is a naive assumption about placement. This should be more mature.
+          const clientRect = this.target().getBoundingClientRect();
+          this.style.top = clientRect.y + 'px';
+          this.style.right = clientRect.x + 'px';
+        }
+
+        hide() {
+          this.$.tooltip.classList.add('hidden');
+        }
+
+        target() {
+          return Polymer.dom(this).parentNode.querySelector('#' + this.for);
         }
       }
 
