@@ -1,0 +1,26 @@
+<dom-module id="vaadin-tooltip-basic-demos">
+  <template>
+    <style include="vaadin-component-demo-shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <h3>Demo sample</h3>
+    <vaadin-demo-snippet id="vaadin-tooltip-demo-sample">
+      <template preserve-content>
+        <vaadin-tooltip>
+        </vaadin-tooltip>
+      </template>
+    </vaadin-demo-snippet>
+
+  </template>
+  <script>
+    class VaadinTooltipBasicDemos extends DemoReadyEventEmitter(ElementDemo(Polymer.Element)) {
+      static get is() {
+        return 'vaadin-tooltip-basic-demos';
+      }
+    }
+    customElements.define(VaadinTooltipBasicDemos.is, VaadinTooltipBasicDemos);
+  </script>
+</dom-module>

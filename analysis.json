@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "namespaces": [
+    {
+      "name": "Vaadin",
+      "description": "",
+      "summary": "",
+      "sourceRange": {
+        "file": "src/vaadin-tooltip.html",
+        "start": {
+          "line": 44,
+          "column": 6
+        },
+        "end": {
+          "line": 44,
+          "column": 68
+        }
+      },
+      "elements": [
+        {
+          "description": "`<vaadin-tooltip>` is a template for incubator components.\n\n```\n<vaadin-tooltip>\n</vaadin-tooltip>\n```",
+          "summary": "",
+          "path": "src/vaadin-tooltip.html",
+          "properties": [],
+          "methods": [],
+          "staticMethods": [],
+          "demos": [
+            {
+              "url": "demo/index.html",
+              "description": ""
+            }
+          ],
+          "metadata": {},
+          "sourceRange": {
+            "start": {
+              "line": 33,
+              "column": 6
+            },
+            "end": {
+              "line": 37,
+              "column": 7
+            }
+          },
+          "privacy": "public",
+          "superclass": "HTMLElement",
+          "name": "Vaadin.VaadinTooltip",
+          "attributes": [],
+          "events": [],
+          "styling": {
+            "cssVariables": [],
+            "selectors": []
+          },
+          "slots": [],
+          "tagname": "vaadin-tooltip"
+        }
+      ]
+    }
+  ]
+}
