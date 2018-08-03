@@ -1,9 +1,33 @@
 <link rel="import" href="../../../vaadin-lumo-styles/color.html">
+<link rel="import" href="../../../vaadin-lumo-styles/sizing.html">
 <link rel="import" href="../../../vaadin-lumo-styles/spacing.html">
+<link rel="import" href="../../../vaadin-lumo-styles/style.html">
+<link rel="import" href="../../../vaadin-lumo-styles/typography.html">
 
-<dom-module id="lumo-incubator-element" theme-for="vaadin-tooltip">
+<dom-module id="lumo-tooltip" theme-for="vaadin-tooltip">
   <template>
-    <style include="lumo-incubator-element-styles">
+    <style>
+      :host {
+        /* Sizing */
+        --lumo-tooltip-size: var(--lumo-size-m);
+        box-sizing: border-box;
+        padding: 0 calc(var(--lumo-tooltip-size) / 3 + var(--lumo-border-radius) / 2);
+        /* Style */
+        font-family: var(--lumo-font-family);
+        font-size: var(--lumo-font-size-m);
+        font-weight: 500;
+        color: var(--lumo-body-text-color);
+        background-color: var(--lumo-contrast-5pct);
+        border-radius: var(--lumo-border-radius);
+        cursor: default;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      [part="content"] {
+        padding: calc(var(--lumo-tooltip-size) / 6) 0;
+      }
     </style>
   </template>
 </dom-module>

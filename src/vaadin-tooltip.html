@@ -18,20 +18,24 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         position: absolute;
         outline: none;
         z-index: 1000;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: default;
+
+      }
+
+      :host:hover {
+        display: block !important;
       }
 
       .hidden {
         display: none !important;
       }
-
-      #tooltip {
-        padding: 10px;
-        border: 1px solid;
-        border-radius: 5px;
-      }
     </style>
 
-    <div id="tooltip" class="hidden">
+    <div id="tooltip" part="content" class="hidden">
       <slot></slot>
     </div>
   </template>
@@ -76,15 +80,39 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             target.addEventListener('blur', this.hide.bind(this));
             target.addEventListener('tap', this.hide.bind(this));
           }
+
+          this.addEventListener('mouseenter', this.hide.bind(this));
+        }
+
+        _detachFromTarget() {
+          const target = this.target();
+
+          if (target) {
+            target.removeEventListener('mouseenter', this.show.bind(this));
+            target.removeEventListener('focus', this.show.bind(this));
+            target.removeEventListener('mouseleave', this.hide.bind(this));
+            target.removeEventListener('blur', this.hide.bind(this));
+            target.removeEventListener('tap', this.hide.bind(this));
+          }
         }
 
         show() {
           this.$.tooltip.classList.remove('hidden');
 
-          //TODO: This is a naive assumption about placement. This should be more mature.
-          const clientRect = this.target().getBoundingClientRect();
-          this.style.top = clientRect.y + 'px';
-          this.style.right = clientRect.x + 'px';
+          //TODO: This is a naive assumption about placement and only places the tooltip
+          // at the center bottom of the host. This should be more mature.
+          const parentRect = this.offsetParent.getBoundingClientRect();
+          const targetRect = this.target().getBoundingClientRect();
+          const thisRect = this.getBoundingClientRect();
+          const targetLeft = targetRect.left - parentRect.left;
+          const targetTop = targetRect.top - parentRect.top;
+          const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
+          const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
+          const tooltipLeft = targetLeft + horizontalCenterOffset;
+          const tooltipTop = targetTop - thisRect.height;
+
+          this.style.top = `${tooltipTop}px`;
+          this.style.left = `${tooltipLeft}px`;
         }
 
         hide() {
@@ -92,6 +120,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         target() {
+          // Target element should be a sibling.
           return Polymer.dom(this).parentNode.querySelector('#' + this.for);
         }
       }
