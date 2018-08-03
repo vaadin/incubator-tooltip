@@ -23,7 +23,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         -webkit-user-select: none;
         user-select: none;
         cursor: default;
-
       }
 
       :host:hover {
@@ -99,7 +98,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         show() {
           this.$.tooltip.classList.remove('hidden');
 
-          //TODO: This is a naive assumption about placement and only places the tooltip
+          // TODO: This is a naive assumption about placement and only places the tooltip
           // at the center top of the host. This should be more mature.
           const parentRect = this.offsetParent.getBoundingClientRect();
           const targetRect = this.target().getBoundingClientRect();
@@ -107,7 +106,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           const targetLeft = targetRect.left - parentRect.left;
           const targetTop = targetRect.top - parentRect.top;
           const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
-          const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
           const tooltipLeft = targetLeft + horizontalCenterOffset;
           const tooltipTop = targetTop - thisRect.height;
 
