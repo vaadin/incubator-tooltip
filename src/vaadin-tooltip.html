@@ -100,7 +100,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           this.$.tooltip.classList.remove('hidden');
 
           //TODO: This is a naive assumption about placement and only places the tooltip
-          // at the center bottom of the host. This should be more mature.
+          // at the center top of the host. This should be more mature.
           const parentRect = this.offsetParent.getBoundingClientRect();
           const targetRect = this.target().getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
