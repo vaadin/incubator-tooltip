@@ -29,12 +29,12 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         display: block !important;
       }
 
-      :host([tooltip-hidden]) #tooltip {
+      :host([tooltip-hidden]) [part="content"] {
         display: none !important;
       }
     </style>
 
-    <div id="tooltip" part="content" class="hidden">
+    <div part="content" theme="dark">
       <slot></slot>
     </div>
   </template>

@@ -7,11 +7,22 @@
     </style>
 
     <h3>Simple demo</h3>
-    <vaadin-demo-snippet id="vaadin-tooltip-demo-sample">
+    <vaadin-demo-snippet id="vaadin-tooltip-demo-sample-1">
+      <template preserve-content>
+        <h1 id="to-be-tooltiped">This is a test title with tooltip</h1>
+        <vaadin-tooltip id="my-tooltip" for="to-be-tooltiped" position="top">
+          Some descriptive text about this title.
+        </vaadin-tooltip>
+      </template>
+    </vaadin-demo-snippet>
+
+    <h3>Rich</h3>
+    <vaadin-demo-snippet id="vaadin-tooltip-demo-sample-2">
       <template preserve-content>
         <h1 id="to-be-tooltiped">This is a test title with tooltip</h1>
         <vaadin-tooltip id="my-tooltip" for="to-be-tooltiped" position="bottom">
-          Some descriptive text about this title.
+          <h2>This a header inside the tooltip</h2>
+          <em>And this text an emphasized.</em>
         </vaadin-tooltip>
       </template>
     </vaadin-demo-snippet>
