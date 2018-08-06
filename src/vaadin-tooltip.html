@@ -29,7 +29,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         display: block !important;
       }
 
-      .hidden {
+      :host([tooltip-hidden]) #tooltip {
         display: none !important;
       }
     </style>
@@ -60,13 +60,38 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         static get properties() {
           return {
             /**
-             * The text content of the tooltip
+             * The id of the target element. Must be a sibling.
              */
             for: {
               type: String,
               observer: '_attachToTarget'
+            },
+
+            /**
+             * Tooltip position. Possible values: top, right, left and bottom.
+             */
+            position: {
+              type: String,
+              observer: '_setPosition',
+              value: 'top'
+            },
+
+            tooltipHidden: {
+              type: Boolean,
+              value: true,
+              reflectToAttribute: true
             }
           };
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          this._attachToTarget();
+        }
+
+        disconnectedCallback() {
+          super.disconnectedCallback();
+          this._detachFromTarget();
         }
 
         _attachToTarget() {
@@ -95,9 +120,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        show() {
-          this.$.tooltip.classList.remove('hidden');
-
+        _setPosition() {
           // TODO: This is a naive assumption about placement and only places the tooltip
           // at the center top of the host. This should be more mature.
           const parentRect = this.offsetParent.getBoundingClientRect();
@@ -106,15 +129,39 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           const targetLeft = targetRect.left - parentRect.left;
           const targetTop = targetRect.top - parentRect.top;
           const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
-          const tooltipLeft = targetLeft + horizontalCenterOffset;
-          const tooltipTop = targetTop - thisRect.height;
+          const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
+          let tooltipLeft, tooltipTop;
+
+          switch (this.position) {
+            case 'top':
+              tooltipLeft = targetLeft + horizontalCenterOffset;
+              tooltipTop = targetTop - thisRect.height;
+              break;
+            case 'bottom':
+              tooltipLeft = targetLeft + horizontalCenterOffset;
+              tooltipTop = targetTop + targetRect.height;
+              break;
+            case 'left':
+              tooltipLeft = targetLeft - thisRect.width;
+              tooltipTop = targetTop + verticalCenterOffset;
+              break;
+            case 'right':
+              tooltipLeft = targetLeft + targetRect.width;
+              tooltipTop = targetTop + verticalCenterOffset;
+              break;
+          }
 
           this.style.top = `${tooltipTop}px`;
           this.style.left = `${tooltipLeft}px`;
         }
 
+        show() {
+          this.tooltipHidden = false;
+          this._setPosition();
+        }
+
         hide() {
-          this.$.tooltip.classList.add('hidden');
+          this.tooltipHidden = true;
         }
 
         target() {
