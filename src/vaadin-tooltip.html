@@ -83,7 +83,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         disconnectedCallback() {
           super.disconnectedCallback();
-          _detachFromTarget();
+          this._detachFromTarget();
         }
 
         _attachToTarget() {
@@ -136,7 +136,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             case 'left':
               tooltipLeft = targetLeft - thisRect.width;
               tooltipTop = targetTop + verticalCenterOffset;
-              console.log(tooltipLeft);
               break;
             case 'right':
               tooltipLeft = targetLeft + targetRect.width;
