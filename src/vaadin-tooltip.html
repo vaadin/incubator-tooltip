@@ -29,7 +29,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         display: block !important;
       }
 
-      .hidden {
+      :host([tooltip-hidden]) #tooltip {
         display: none !important;
       }
     </style>
@@ -66,6 +66,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               type: String,
               observer: '_attachToTarget'
             },
+
             /**
              * Tooltip position. Possible values: top, right, left and bottom.
              */
@@ -73,12 +74,19 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               type: String,
               observer: '_setPosition',
               value: 'top'
+            },
+
+            tooltipHidden: {
+              type: Boolean,
+              value: true,
+              reflectToAttribute: true
             }
           };
         }
 
         connectedCallback() {
           super.connectedCallback();
+          this._attachToTarget();
         }
 
         disconnectedCallback() {
@@ -148,12 +156,12 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         show() {
-          this.$.tooltip.classList.remove('hidden');
+          this.tooltipHidden = false;
           this._setPosition();
         }
 
         hide() {
-          this.$.tooltip.classList.add('hidden');
+          this.tooltipHidden = true;
         }
 
         target() {
