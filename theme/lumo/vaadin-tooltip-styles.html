@@ -6,7 +6,7 @@
 
 <dom-module id="lumo-tooltip" theme-for="vaadin-tooltip">
   <template>
-    <style>
+    <style include="lumo-color">
       :host {
         /* Sizing */
         --lumo-tooltip-size: var(--lumo-size-m);
@@ -16,9 +16,6 @@
         font-family: var(--lumo-font-family);
         font-size: var(--lumo-font-size-m);
         font-weight: 500;
-        color: var(--lumo-body-text-color);
-        background-color: var(--lumo-contrast-5pct);
-        border-radius: var(--lumo-border-radius);
         cursor: default;
         -webkit-tap-highlight-color: transparent;
         -webkit-font-smoothing: antialiased;
@@ -26,7 +23,10 @@
       }
 
       [part="content"] {
-        padding: calc(var(--lumo-tooltip-size) / 6) 0;
+        padding: calc(var(--lumo-tooltip-size) / 6);
+        color: var(--lumo-body-text-color);
+        background-color: var(--lumo-base-color);
+        border-radius: var(--lumo-border-radius);
       }
     </style>
   </template>
