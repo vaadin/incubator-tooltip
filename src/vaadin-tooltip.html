@@ -167,8 +167,22 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
           }
 
-          this.style.top = `${Math.floor(tooltipTop)}px`;
-          this.style.left = `${Math.floor(tooltipLeft)}px`;
+          // Check and fix horizontal position
+          if (parentRect.left + tooltipLeft + thisRect.width > window.innerWidth) {
+            this.style.right = '0px';
+            this.style.left = 'auto';
+          } else {
+            this.style.left = Math.max(0, tooltipLeft) + 'px';
+            this.style.right = 'auto';
+          }
+          // Check and fix vertical position
+          if (parentRect.top + tooltipTop + thisRect.height > window.innerHeight) {
+            this.style.bottom = parentRect.height + 'px';
+            this.style.top = 'auto';
+          } else {
+            this.style.top = Math.max(-parentRect.top, tooltipTop) + 'px';
+            this.style.bottom = 'auto';
+          }
         }
 
         _calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset) {
