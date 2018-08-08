@@ -76,6 +76,18 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               value: 'top'
             },
 
+            /*
+             * Alignment to the target element. Possible values: top, bottom, left, right and center.
+             */
+            align: {
+              type: String,
+              observer: '_setPosition',
+              value: 'center'
+            },
+
+            /**
+             * Is the tooltip hidden.
+             */
             tooltipHidden: {
               type: Boolean,
               value: true,
@@ -121,8 +133,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _setPosition() {
-          // TODO: This is a naive assumption about placement and only places the tooltip
-          // at the center top of the host. This should be more mature.
           const parentRect = this.offsetParent.getBoundingClientRect();
           const targetRect = this.target().getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
@@ -134,25 +144,47 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
           switch (this.position) {
             case 'top':
-              tooltipLeft = targetLeft + horizontalCenterOffset;
               tooltipTop = targetTop - thisRect.height;
+              tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'bottom':
-              tooltipLeft = targetLeft + horizontalCenterOffset;
               tooltipTop = targetTop + targetRect.height;
+              tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'left':
               tooltipLeft = targetLeft - thisRect.width;
-              tooltipTop = targetTop + verticalCenterOffset;
+              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
               break;
             case 'right':
               tooltipLeft = targetLeft + targetRect.width;
-              tooltipTop = targetTop + verticalCenterOffset;
+              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
               break;
           }
 
-          this.style.top = `${tooltipTop}px`;
-          this.style.left = `${tooltipLeft}px`;
+          this.style.top = `${Math.floor(tooltipTop)}px`;
+          this.style.left = `${Math.floor(tooltipLeft)}px`;
+        }
+
+        _calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset) {
+          switch (this.align) {
+            case 'left':
+              return targetLeft;
+            case 'right':
+              return targetRect.left + targetRect.width - thisRect.width;
+            default:
+              return targetLeft + horizontalCenterOffset;
+          }
+        }
+
+        _calculateTop(targetTop, verticalCenterOffset) {
+          switch (this.align) {
+            case 'top':
+              return targetTop;
+            case 'bottom':
+              return targetTop;
+            default:
+              return targetTop + verticalCenterOffset;
+          }
         }
 
         show() {
