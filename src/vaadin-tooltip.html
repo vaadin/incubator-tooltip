@@ -145,64 +145,46 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           switch (this.position) {
             case 'top':
               tooltipTop = targetTop - thisRect.height;
-
-              switch (this.align) {
-                case 'left':
-                  tooltipLeft = targetLeft;
-                  break;
-                case 'right':
-                  tooltipLeft = targetRect.left + targetRect.width - thisRect.width;
-                  break;
-                default:
-                  tooltipLeft = targetLeft + horizontalCenterOffset;
-              }
+              tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'bottom':
               tooltipTop = targetTop + targetRect.height;
-
-              switch (this.align) {
-                case 'left':
-                  tooltipLeft = targetLeft;
-                  break;
-                case 'right':
-                  tooltipLeft = targetRect.left + targetRect.width - thisRect.width;
-                  break;
-                default:
-                  tooltipLeft = targetLeft + horizontalCenterOffset;
-              }
+              tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'left':
               tooltipLeft = targetLeft - thisRect.width;
-
-              switch (this.align) {
-                case 'top':
-                  tooltipTop = targetTop;
-                  break;
-                case 'bottom':
-                  tooltipTop = targetTop;
-                  break;
-                default:
-                  tooltipTop = targetTop + verticalCenterOffset;
-              }
+              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
               break;
             case 'right':
               tooltipLeft = targetLeft + targetRect.width;
-
-              switch (this.align) {
-                case 'top':
-                  tooltipTop = targetTop;
-                  break;
-                case 'bottom':
-                  tooltipTop = targetTop;
-                  break;
-                default:
-                  tooltipTop = targetTop + verticalCenterOffset;
-              }
+              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
               break;
           }
 
           this.style.top = `${Math.floor(tooltipTop)}px`;
           this.style.left = `${Math.floor(tooltipLeft)}px`;
+        }
+
+        _calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset) {
+          switch (this.align) {
+            case 'left':
+              return targetLeft;
+            case 'right':
+              return targetRect.left + targetRect.width - thisRect.width;
+            default:
+              return targetLeft + horizontalCenterOffset;
+          }
+        }
+
+        _calculateTop(targetTop, verticalCenterOffset) {
+          switch (this.align) {
+            case 'top':
+              return targetTop;
+            case 'bottom':
+              return targetTop;
+            default:
+              return targetTop + verticalCenterOffset;
+          }
         }
 
         show() {
