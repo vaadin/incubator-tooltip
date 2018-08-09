@@ -56,6 +56,14 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         static get properties() {
           return {
             /**
+             * The id of the target element. Must be a sibling.
+             */
+             for: {
+              type: String,
+              observer: '_attachToTarget'
+            },
+
+            /**
              * Tooltip position. Possible values: top, right, left and bottom.
              */
             position: {
@@ -101,6 +109,13 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         connectedCallback() {
           super.connectedCallback();
           this._attachToTarget();
+
+          const target = this._target();
+          if(target) {
+            Polymer.dom(target).appendChild(this);
+          }
+
+          this._mounted = true;
         }
 
         disconnectedCallback() {
@@ -211,7 +226,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _target() {
-          return Polymer.dom(this).parentNode;
+          if(this._mounted) {
+            return Polymer.dom(this).parentNode;
+          } else {
+            return Polymer.dom(this).parentNode.querySelector(`#${this.for}`);
+          }
         }
       }
 
