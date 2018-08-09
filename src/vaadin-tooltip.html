@@ -25,11 +25,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         cursor: default;
       }
 
-      :host:hover {
-        display: block !important;
-      }
-
-      :host([tooltip-hidden]) [part="content"] {
+      :host([hidden]) [part="content"] {
         display: none !important;
       }
     </style>
@@ -60,14 +56,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         static get properties() {
           return {
             /**
-             * The id of the target element. Must be a sibling.
-             */
-            for: {
-              type: String,
-              observer: '_attachToTarget'
-            },
-
-            /**
              * Tooltip position. Possible values: top, right, left and bottom.
              */
             position: {
@@ -88,7 +76,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             /**
              * Is the tooltip hidden.
              */
-            tooltipHidden: {
+            hidden: {
               type: Boolean,
               value: true,
               reflectToAttribute: true
@@ -113,7 +101,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _attachToTarget() {
-          const target = this.target();
+          const target = this._target();
 
           if (target) {
             target.addEventListener('mouseenter', this._boundShow);
@@ -122,12 +110,10 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             target.addEventListener('blur', this._boundHide);
             target.addEventListener('tap', this._boundHide);
           }
-
-          this.addEventListener('mouseenter', this._boundHide);
         }
 
         _detachFromTarget() {
-          const target = this.target();
+          const target = this._target();
 
           if (target) {
             target.removeEventListener('mouseenter', this._boundShow);
@@ -140,7 +126,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         _setPosition() {
           const parentRect = this.offsetParent.getBoundingClientRect();
-          const targetRect = this.target().getBoundingClientRect();
+          const targetRect = this._target().getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left - parentRect.left;
           const targetTop = targetRect.top - parentRect.top;
@@ -167,8 +153,22 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
           }
 
-          this.style.top = `${Math.floor(tooltipTop)}px`;
-          this.style.left = `${Math.floor(tooltipLeft)}px`;
+          // Check and fix horizontal position
+          if (parentRect.left + tooltipLeft + thisRect.width > window.innerWidth) {
+            this.style.right = '0px';
+            this.style.left = 'auto';
+          } else {
+            this.style.left = Math.max(0, tooltipLeft) + 'px';
+            this.style.right = 'auto';
+          }
+          // Check and fix vertical position
+          if (parentRect.top + tooltipTop + thisRect.height > window.innerHeight) {
+            this.style.bottom = parentRect.height + 'px';
+            this.style.top = 'auto';
+          } else {
+            this.style.top = Math.max(-parentRect.top, tooltipTop) + 'px';
+            this.style.bottom = 'auto';
+          }
         }
 
         _calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset) {
@@ -193,18 +193,17 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        show() {
-          this.tooltipHidden = false;
+        show(e) {
+          this.hidden = false;
           this._setPosition();
         }
 
         hide() {
-          this.tooltipHidden = true;
+          this.hidden = true;
         }
 
-        target() {
-          // Target element should be a sibling.
-          return Polymer.dom(this).parentNode.querySelector('#' + this.for);
+        _target() {
+          return Polymer.dom(this).parentNode;
         }
       }
 
