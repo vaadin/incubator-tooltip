@@ -80,6 +80,14 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               type: Boolean,
               value: true,
               reflectToAttribute: true
+            },
+
+            /**
+             * Enable manual mode.
+             */
+            manual: {
+              type: Boolean,
+              value: false
             }
           };
         }
@@ -103,7 +111,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         _attachToTarget() {
           const target = this._target();
 
-          if (target) {
+          if (target && !this.manual) {
             target.addEventListener('mouseenter', this._boundShow);
             target.addEventListener('focus', this._boundShow);
             target.addEventListener('mouseleave', this._boundHide);
@@ -115,7 +123,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         _detachFromTarget() {
           const target = this._target();
 
-          if (target) {
+          if (target && !this.manual) {
             target.removeEventListener('mouseenter', this._boundShow);
             target.removeEventListener('focus', this._boundShow);
             target.removeEventListener('mouseleave', this._boundHide);
