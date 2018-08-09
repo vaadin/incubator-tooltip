@@ -25,10 +25,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         cursor: default;
       }
 
-      :host:hover {
-        display: block !important;
-      }
-
       :host([tooltip-hidden]) [part="content"] {
         display: none !important;
       }
@@ -207,7 +203,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        show() {
+        show(e) {
           this.tooltipHidden = false;
           this._setPosition();
         }
