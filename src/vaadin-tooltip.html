@@ -96,6 +96,12 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           };
         }
 
+        constructor() {
+          super();
+          this._boundShow = this.show.bind(this);
+          this._boundHide = this.hide.bind(this);
+        }
+
         connectedCallback() {
           super.connectedCallback();
           this._attachToTarget();
@@ -110,25 +116,25 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           const target = this.target();
 
           if (target) {
-            target.addEventListener('mouseenter', this.show.bind(this));
-            target.addEventListener('focus', this.show.bind(this));
-            target.addEventListener('mouseleave', this.hide.bind(this));
-            target.addEventListener('blur', this.hide.bind(this));
-            target.addEventListener('tap', this.hide.bind(this));
+            target.addEventListener('mouseenter', this._boundShow);
+            target.addEventListener('focus', this._boundShow);
+            target.addEventListener('mouseleave', this._boundHide);
+            target.addEventListener('blur', this._boundHide);
+            target.addEventListener('tap', this._boundHide);
           }
 
-          this.addEventListener('mouseenter', this.hide.bind(this));
+          this.addEventListener('mouseenter', this._boundHide);
         }
 
         _detachFromTarget() {
           const target = this.target();
 
           if (target) {
-            target.removeEventListener('mouseenter', this.show.bind(this));
-            target.removeEventListener('focus', this.show.bind(this));
-            target.removeEventListener('mouseleave', this.hide.bind(this));
-            target.removeEventListener('blur', this.hide.bind(this));
-            target.removeEventListener('tap', this.hide.bind(this));
+            target.removeEventListener('mouseenter', this._boundShow);
+            target.removeEventListener('focus', this._boundShow);
+            target.removeEventListener('mouseleave', this._boundHide);
+            target.removeEventListener('blur', this._boundHide);
+            target.removeEventListener('tap', this._boundHide);
           }
         }
 
