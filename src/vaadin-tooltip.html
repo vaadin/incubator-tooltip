@@ -58,7 +58,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             /**
              * The id of the target element. Must be a sibling.
              */
-             for: {
+            for: {
               type: String,
               observer: '_attachToTarget'
             },
@@ -95,7 +95,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
              */
             manual: {
               type: Boolean,
-              value: false
+              value: false,
+              reflectToAttribute: true
             }
           };
         }
@@ -111,7 +112,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           this._attachToTarget();
 
           const target = this._target();
-          if(target) {
+          if (target) {
             Polymer.dom(target).appendChild(this);
           }
 
@@ -226,7 +227,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _target() {
-          if(this._mounted) {
+          if (this._mounted) {
             return Polymer.dom(this).parentNode;
           } else {
             return Polymer.dom(this).parentNode.querySelector(`#${this.for}`);

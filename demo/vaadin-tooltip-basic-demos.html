@@ -26,7 +26,7 @@
         </h1>
         <vaadin-tooltip id="my-tooltip" for="to-be-tooltiped" position="right" align="bottom">
           <h2>This a header inside the tooltip</h2>
-          <em>And this text an emphasized.</em>
+          <em>And this text is emphasized.</em>
         </vaadin-tooltip>
       </template>
     </vaadin-demo-snippet>
@@ -37,12 +37,12 @@
         <vaadin-button id="demo-btn">
           Tooltip will be shown after clicking on this
         </vaadin-button>
-        <vaadin-tooltip id="my-tooltip" for="demo-btn" position="top" manual="true">
+        <vaadin-tooltip id="my-tooltip" for="demo-btn" position="top" manual>
           A tooltip to remember.
         </vaadin-tooltip>
       </template>
       <script>
-        window.addDemoReadyListener('#vaadin-tooltip-demo-sample-3', function (document) {
+        window.addDemoReadyListener('#vaadin-tooltip-demo-sample-3', function(document) {
           const tooltipElement = document.querySelector('#my-tooltip');
           const btn = document.querySelector('#demo-btn');
           btn.addEventListener('click', () => {
@@ -51,7 +51,7 @@
             } else {
               tooltipElement.hide();
             }
-          })
+          });
         });
       </script>
     </vaadin-demo-snippet>
