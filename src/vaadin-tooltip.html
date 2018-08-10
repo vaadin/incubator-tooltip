@@ -102,6 +102,10 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             isAttached: {
               type: Boolean,
               value: false
+            },
+
+            _targetElement: {
+              type: Object
             }
           };
         }
@@ -120,15 +124,16 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         connectedCallback() {
-          super.connectedCallback();
-          this._attachToTarget();
-
-          const target = this._target();
-          if (target) {
-            Polymer.dom(target).appendChild(this);
+          if (!this._targetElement) {
+            this._targetElement = Polymer.dom(this).parentNode.querySelector(`#${this.for}`);
+          }
+          if (this._targetElement && !this.isAttached) {
+            this.isAttached = true;
+            Polymer.dom(this._targetElement).appendChild(this);
           }
 
-          this.isAttached = true;
+          this._attachToTarget();
+          super.connectedCallback();
         }
 
         disconnectedCallback() {
@@ -140,26 +145,23 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           if (!this.isAttached) {
             return;
           }
-          const target = this._target();
 
-          if (target && !this.manual) {
-            target.addEventListener('mouseenter', this._boundShow);
-            target.addEventListener('focus', this._boundShow);
-            target.addEventListener('mouseleave', this._boundHide);
-            target.addEventListener('blur', this._boundHide);
-            target.addEventListener('tap', this._boundHide);
+          if (this._targetElement && !this.manual) {
+            this._targetElement.addEventListener('mouseenter', this._boundShow);
+            this._targetElement.addEventListener('focus', this._boundShow);
+            this._targetElement.addEventListener('mouseleave', this._boundHide);
+            this._targetElement.addEventListener('blur', this._boundHide);
+            this._targetElement.addEventListener('tap', this._boundHide);
           }
         }
 
         _detachFromTarget() {
-          const target = this._target();
-
-          if (target && !this.manual) {
-            target.removeEventListener('mouseenter', this._boundShow);
-            target.removeEventListener('focus', this._boundShow);
-            target.removeEventListener('mouseleave', this._boundHide);
-            target.removeEventListener('blur', this._boundHide);
-            target.removeEventListener('tap', this._boundHide);
+          if (this._targetElement && !this.manual) {
+            this._targetElement.removeEventListener('mouseenter', this._boundShow);
+            this._targetElement.removeEventListener('focus', this._boundShow);
+            this._targetElement.removeEventListener('mouseleave', this._boundHide);
+            this._targetElement.removeEventListener('blur', this._boundHide);
+            this._targetElement.removeEventListener('tap', this._boundHide);
           }
         }
 
@@ -168,7 +170,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             return;
           }
           const parentRect = this.offsetParent.getBoundingClientRect();
-          const targetRect = this._target().getBoundingClientRect();
+          const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left - parentRect.left;
           const targetTop = targetRect.top - parentRect.top;
@@ -242,14 +244,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         hide() {
           this.hidden = true;
-        }
-
-        _target() {
-          if (this.isAttached) {
-            return Polymer.dom(this).parentNode;
-          } else {
-            return Polymer.dom(this).parentNode.querySelector(`#${this.for}`);
-          }
         }
       }
 
