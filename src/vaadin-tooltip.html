@@ -56,11 +56,17 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         static get properties() {
           return {
             /**
+             * The id of the target element. Must be a sibling.
+             */
+            for: {
+              type: String
+            },
+
+            /**
              * Tooltip position. Possible values: top, right, left and bottom.
              */
             position: {
               type: String,
-              observer: '_setPosition',
               value: 'top'
             },
 
@@ -69,7 +75,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
              */
             align: {
               type: String,
-              observer: '_setPosition',
               value: 'center'
             },
 
@@ -80,8 +85,36 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               type: Boolean,
               value: true,
               reflectToAttribute: true
+            },
+
+            /**
+             * Enable manual mode.
+             */
+            manual: {
+              type: Boolean,
+              value: false,
+              reflectToAttribute: true
+            },
+
+            /**
+             * If the element is mounted to the DOM.
+             */
+            isAttached: {
+              type: Boolean,
+              value: false
+            },
+
+            _targetElement: {
+              type: Object
             }
           };
+        }
+
+        static get observers() {
+          return [
+            '_setPosition(position, align, isAttached)',
+            '_attachToTarget(for, isAttached)'
+          ]
         }
 
         constructor() {
@@ -91,8 +124,16 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         connectedCallback() {
-          super.connectedCallback();
+          if (!this._targetElement) {
+            this._targetElement = Polymer.dom(this).parentNode.querySelector(`#${this.for}`);
+          }
+          if (this._targetElement && !this.isAttached) {
+            this.isAttached = true;
+            Polymer.dom(this._targetElement).appendChild(this);
+          }
+
           this._attachToTarget();
+          super.connectedCallback();
         }
 
         disconnectedCallback() {
@@ -101,32 +142,35 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _attachToTarget() {
-          const target = this._target();
+          if (!this.isAttached) {
+            return;
+          }
 
-          if (target) {
-            target.addEventListener('mouseenter', this._boundShow);
-            target.addEventListener('focus', this._boundShow);
-            target.addEventListener('mouseleave', this._boundHide);
-            target.addEventListener('blur', this._boundHide);
-            target.addEventListener('tap', this._boundHide);
+          if (this._targetElement && !this.manual) {
+            this._targetElement.addEventListener('mouseenter', this._boundShow);
+            this._targetElement.addEventListener('focus', this._boundShow);
+            this._targetElement.addEventListener('mouseleave', this._boundHide);
+            this._targetElement.addEventListener('blur', this._boundHide);
+            this._targetElement.addEventListener('tap', this._boundHide);
           }
         }
 
         _detachFromTarget() {
-          const target = this._target();
-
-          if (target) {
-            target.removeEventListener('mouseenter', this._boundShow);
-            target.removeEventListener('focus', this._boundShow);
-            target.removeEventListener('mouseleave', this._boundHide);
-            target.removeEventListener('blur', this._boundHide);
-            target.removeEventListener('tap', this._boundHide);
+          if (this._targetElement && !this.manual) {
+            this._targetElement.removeEventListener('mouseenter', this._boundShow);
+            this._targetElement.removeEventListener('focus', this._boundShow);
+            this._targetElement.removeEventListener('mouseleave', this._boundHide);
+            this._targetElement.removeEventListener('blur', this._boundHide);
+            this._targetElement.removeEventListener('tap', this._boundHide);
           }
         }
 
         _setPosition() {
+          if (!this.isAttached) {
+            return;
+          }
           const parentRect = this.offsetParent.getBoundingClientRect();
-          const targetRect = this._target().getBoundingClientRect();
+          const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left - parentRect.left;
           const targetTop = targetRect.top - parentRect.top;
@@ -200,10 +244,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         hide() {
           this.hidden = true;
-        }
-
-        _target() {
-          return Polymer.dom(this).parentNode;
         }
       }
 

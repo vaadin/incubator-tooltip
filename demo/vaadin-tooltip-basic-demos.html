@@ -11,10 +11,10 @@
       <template preserve-content>
         <h1 id="to-be-tooltiped">
           This is a test title with tooltip.
-          <vaadin-tooltip id="my-tooltip" position="left" align="center">
-            Some descriptive text about this title.
-          </vaadin-tooltip>
         </h1>
+        <vaadin-tooltip id="my-tooltip" for="to-be-tooltiped" position="left" align="center">
+          Some descriptive text about this title.
+        </vaadin-tooltip>
       </template>
     </vaadin-demo-snippet>
 
@@ -23,12 +23,37 @@
       <template preserve-content>
         <h1 id="to-be-tooltiped">
           This is a test title with tooltip
-          <vaadin-tooltip id="my-tooltip" position="right" align="bottom">
-            <h2>This a header inside the tooltip</h2>
-            <em>And this text an emphasized.</em>
-          </vaadin-tooltip>
         </h1>
+        <vaadin-tooltip id="my-tooltip" for="to-be-tooltiped" position="right" align="bottom">
+          <h2>This a header inside the tooltip</h2>
+          <em>And this text is emphasized.</em>
+        </vaadin-tooltip>
       </template>
+    </vaadin-demo-snippet>
+
+    <h3>Manual Mode</h3>
+    <vaadin-demo-snippet id="vaadin-tooltip-demo-sample-3">
+      <template preserve-content>
+        <vaadin-button id="demo-btn">
+          Tooltip will be shown after clicking on this
+        </vaadin-button>
+        <vaadin-tooltip id="my-tooltip" for="demo-btn" position="top" manual>
+          A tooltip to remember.
+        </vaadin-tooltip>
+      </template>
+      <script>
+        window.addDemoReadyListener('#vaadin-tooltip-demo-sample-3', function(document) {
+          const tooltipElement = document.querySelector('#my-tooltip');
+          const btn = document.querySelector('#demo-btn');
+          btn.addEventListener('click', () => {
+            if (tooltipElement.hidden) {
+              tooltipElement.show();
+            } else {
+              tooltipElement.hide();
+            }
+          });
+        });
+      </script>
     </vaadin-demo-snippet>
 
   </template>
