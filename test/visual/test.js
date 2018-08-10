@@ -1,4 +1,4 @@
-gemini.suite('vaadin-tooltip', function(rootSuite) {
+gemini.suite('incubator-tooltip', function(rootSuite) {
   function wait(actions, find) {
     actions.wait(5000);
   }
