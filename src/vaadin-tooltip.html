@@ -59,8 +59,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
              * The id of the target element. Must be a sibling.
              */
             for: {
-              type: String,
-              observer: '_attachToTarget'
+              type: String
             },
 
             /**
@@ -68,7 +67,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
              */
             position: {
               type: String,
-              observer: '_setPosition',
               value: 'top'
             },
 
@@ -77,7 +75,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
              */
             align: {
               type: String,
-              observer: '_setPosition',
               value: 'center'
             },
 
@@ -102,11 +99,18 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             /**
              * If the element is mounted to the DOM.
              */
-            _mounted: {
+            isAttached: {
               type: Boolean,
               value: false
             }
           };
+        }
+
+        static get observers() {
+          return [
+            '_setPosition(position, align, isAttached)',
+            '_attachToTarget(for, isAttached)'
+          ]
         }
 
         constructor() {
@@ -124,7 +128,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             Polymer.dom(target).appendChild(this);
           }
 
-          this._mounted = true;
+          this.isAttached = true;
         }
 
         disconnectedCallback() {
@@ -133,6 +137,9 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _attachToTarget() {
+          if (!this.isAttached) {
+            return;
+          }
           const target = this._target();
 
           if (target && !this.manual) {
@@ -157,6 +164,9 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _setPosition() {
+          if (!this.isAttached) {
+            return;
+          }
           const parentRect = this.offsetParent.getBoundingClientRect();
           const targetRect = this._target().getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
@@ -235,7 +245,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _target() {
-          if (this._mounted) {
+          if (this.isAttached) {
             return Polymer.dom(this).parentNode;
           } else {
             return Polymer.dom(this).parentNode.querySelector(`#${this.for}`);
