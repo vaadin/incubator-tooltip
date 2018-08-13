@@ -108,6 +108,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
             _targetElement: {
               type: Object
+            },
+
+            _moved: {
+              type: Boolean,
+              value: false
             }
           };
         }
@@ -155,6 +160,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.addEventListener('blur', this._boundHide);
             this._targetElement.addEventListener('tap', this._boundHide);
           }
+
+          if (!this.manual && !this._moved) {
+            this.addEventListener('mouseenter', this._boundShow);
+            this.addEventListener('mouseleave', this._boundHide);
+          }
         }
 
         _detachFromTarget() {
@@ -165,17 +175,30 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.removeEventListener('blur', this._boundHide);
             this._targetElement.removeEventListener('tap', this._boundHide);
           }
+
+          if (!this.manual && !this._moved) {
+            this.removeEventListener('mouseenter', this._boundShow);
+            this.removeEventListener('mouseleave', this._boundHide);
+          }
         }
 
         _setPosition() {
           if (!this.isAttached) {
             return;
           }
-          const parentRect = this.offsetParent.getBoundingClientRect();
+          let parentRectTop = 0,
+            parentRectLeft = 0,
+            parentRectHeight = 0;
+          if (this.offsetParent) {
+            parentRectTop = this.offsetParent.getBoundingClientRect().top;
+            parentRectLeft = this.offsetParent.getBoundingClientRect().left;
+            parentRectHeight = this.offsetParent.getBoundingClientRect().height;
+          }
+          //const parentRect = this.offsetParent.getBoundingClientRect();
           const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
-          const targetLeft = targetRect.left - parentRect.left;
-          const targetTop = targetRect.top - parentRect.top;
+          const targetLeft = targetRect.left - parentRectLeft;
+          const targetTop = targetRect.top - parentRectTop;
           const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
           const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
           let tooltipLeft, tooltipTop;
@@ -200,7 +223,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
 
           // Check and fix horizontal position
-          if (parentRect.left + tooltipLeft + thisRect.width > window.innerWidth) {
+          if (parentRectLeft + tooltipLeft + thisRect.width > window.innerWidth) {
             this.style.right = '0px';
             this.style.left = 'auto';
           } else {
@@ -208,11 +231,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this.style.right = 'auto';
           }
           // Check and fix vertical position
-          if (parentRect.top + tooltipTop + thisRect.height > window.innerHeight) {
-            this.style.bottom = parentRect.height + 'px';
+          if (parentRectTop + tooltipTop + thisRect.height > window.innerHeight) {
+            this.style.bottom = parentRectHeight + 'px';
             this.style.top = 'auto';
           } else {
-            this.style.top = Math.max(-parentRect.top, tooltipTop) + 'px';
+            this.style.top = Math.max(-parentRectTop, tooltipTop) + 'px';
             this.style.bottom = 'auto';
           }
         }
