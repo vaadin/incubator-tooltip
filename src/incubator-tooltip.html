@@ -110,7 +110,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               type: Object
             },
 
-            _moved: {
+            _replacedInDom: {
               type: Boolean,
               value: false
             }
@@ -161,7 +161,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.addEventListener('tap', this._boundHide);
           }
 
-          if (!this.manual && !this._moved) {
+          if (!this.manual && !this._replacedInDom) {
             this.addEventListener('mouseenter', this._boundShow);
             this.addEventListener('mouseleave', this._boundHide);
           }
@@ -176,7 +176,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.removeEventListener('tap', this._boundHide);
           }
 
-          if (!this.manual && !this._moved) {
+          if (!this.manual && !this._replacedInDom) {
             this.removeEventListener('mouseenter', this._boundShow);
             this.removeEventListener('mouseleave', this._boundHide);
           }
@@ -186,15 +186,16 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           if (!this.isAttached) {
             return;
           }
+          // offsetParent is null for self closing tags.
           let parentRectTop = 0,
             parentRectLeft = 0,
             parentRectHeight = 0;
           if (this.offsetParent) {
-            parentRectTop = this.offsetParent.getBoundingClientRect().top;
-            parentRectLeft = this.offsetParent.getBoundingClientRect().left;
-            parentRectHeight = this.offsetParent.getBoundingClientRect().height;
+            const parentBoundingRect = this.offsetParent.getBoundingClientRect();
+            parentRectTop = parentBoundingRect.top;
+            parentRectLeft = parentBoundingRect.left;
+            parentRectHeight = parentBoundingRect.height;
           }
-          //const parentRect = this.offsetParent.getBoundingClientRect();
           const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left - parentRectLeft;
