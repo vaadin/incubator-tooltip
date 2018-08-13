@@ -36,7 +36,9 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
   </template>
 
   <script>
-    {
+    (function() {
+      'use strict';
+
       /**
        * `<incubator-tooltip>` is a template for incubator components.
        *
@@ -257,6 +259,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       if (window.Vaadin.runIfDevelopmentMode) {
         window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', IncubatorTooltip);
       }
-    }
+    })();
   </script>
 </dom-module>
