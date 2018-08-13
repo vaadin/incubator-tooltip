@@ -3,10 +3,10 @@
   "pages": [
   {
     "name": "Basics",
-    "url": "vaadin-tooltip-basic-demos",
-    "src": "vaadin-tooltip-basic-demos.html",
+    "url": "incubator-tooltip-basic-demos",
+    "src": "incubator-tooltip-basic-demos.html",
     "meta": {
-      "title": "vaadin-tooltip Basic Examples",
+      "title": "incubator-tooltip Basic Examples",
       "description": "",
       "image": ""
      }

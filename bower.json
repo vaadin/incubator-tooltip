@@ -1,19 +1,19 @@
 {
-  "name": "vaadin-tooltip",
+  "name": "incubator-tooltip",
   "homepage": "https://vaadin.com/components",
   "authors": [
     "Vaadin Ltd"
   ],
-  "description": "vaadin-tooltip",
-  "main": "vaadin-tooltip.html",
+  "description": "incubator-tooltip",
+  "main": "incubator-tooltip.html",
   "keywords": [
     "Vaadin",
-    "vaadin-tooltip",
+    "incubator-tooltip",
     "web-components",
     "web-component",
     "polymer"
   ],
-  "license": "https://raw.githubusercontent.com/vaadin/vaadin-tooltip/master/LICENSE",
+  "license": "https://raw.githubusercontent.com/vaadin/incubator-tooltip/master/LICENSE",
   "ignore": [
     "**/.*",
     "node_modules",

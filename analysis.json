@@ -6,7 +6,7 @@
       "description": "",
       "summary": "",
       "sourceRange": {
-        "file": "src/vaadin-tooltip.html",
+        "file": "src/incubator-tooltip.html",
         "start": {
           "line": 44,
           "column": 6
@@ -18,9 +18,9 @@
       },
       "elements": [
         {
-          "description": "`<vaadin-tooltip>` is a template for incubator components.\n\n```\n<vaadin-tooltip>\n</vaadin-tooltip>\n```",
+          "description": "`<incubator-tooltip>` is a template for incubator components.\n\n```\n<incubator-tooltip>\n</incubator-tooltip>\n```",
           "summary": "",
-          "path": "src/vaadin-tooltip.html",
+          "path": "src/incubator-tooltip.html",
           "properties": [],
           "methods": [],
           "staticMethods": [],
@@ -51,7 +51,7 @@
             "selectors": []
           },
           "slots": [],
-          "tagname": "vaadin-tooltip"
+          "tagname": "incubator-tooltip"
         }
       ]
     }
