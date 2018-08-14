@@ -14,6 +14,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
   <template>
     <style>
       :host {
+        box-sizing: border-box;
+        padding: 0;
         display: block;
         position: absolute;
         outline: none;
@@ -25,8 +27,17 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         cursor: default;
       }
 
+      [part="content"] {
+        box-sizing: border-box;
+        width: 100%;
+      }
+
       :host([hidden]) [part="content"] {
         display: none !important;
+      }
+
+      :host ::slotted(*) {
+        box-sizing: border-box;
       }
     </style>
 
@@ -128,12 +139,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         connectedCallback() {
           if (!this._targetElement) {
             this._targetElement = this.parentNode.querySelector(`#${this.for}`);
-          }
-          if (this._targetElement && !this.isAttached) {
             this.isAttached = true;
-            this._targetElement.appendChild(this);
           }
-
           this._attachToTarget();
           super.connectedCallback();
         }
@@ -171,11 +178,20 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           if (!this.isAttached) {
             return;
           }
-          const parentRect = this.offsetParent.getBoundingClientRect();
+          // offsetParent is null for self closing tags.
+          let parentRectTop = 0,
+            parentRectLeft = 0,
+            parentRectHeight = 0;
+          if (this.offsetParent) {
+            const parentBoundingRect = this.offsetParent.getBoundingClientRect();
+            parentRectTop = parentBoundingRect.top;
+            parentRectLeft = parentBoundingRect.left;
+            parentRectHeight = parentBoundingRect.height;
+          }
           const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
-          const targetLeft = targetRect.left - parentRect.left;
-          const targetTop = targetRect.top - parentRect.top;
+          const targetLeft = targetRect.left;
+          const targetTop = targetRect.top - parentRectTop;
           const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
           const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
           let tooltipLeft, tooltipTop;
@@ -191,16 +207,16 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
             case 'left':
               tooltipLeft = targetLeft - thisRect.width;
-              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
+              tooltipTop = this._calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset);
               break;
             case 'right':
               tooltipLeft = targetLeft + targetRect.width;
-              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
+              tooltipTop = this._calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset);
               break;
           }
 
           // Check and fix horizontal position
-          if (parentRect.left + tooltipLeft + thisRect.width > window.innerWidth) {
+          if (parentRectLeft + tooltipLeft + thisRect.width > window.innerWidth) {
             this.style.right = '0px';
             this.style.left = 'auto';
           } else {
@@ -208,11 +224,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this.style.right = 'auto';
           }
           // Check and fix vertical position
-          if (parentRect.top + tooltipTop + thisRect.height > window.innerHeight) {
-            this.style.bottom = parentRect.height + 'px';
+          if (parentRectTop + tooltipTop + thisRect.height > window.innerHeight) {
+            this.style.bottom = parentRectHeight + 'px';
             this.style.top = 'auto';
           } else {
-            this.style.top = Math.max(-parentRect.top, tooltipTop) + 'px';
+            this.style.top = Math.max(-parentRectTop, tooltipTop) + 'px';
             this.style.bottom = 'auto';
           }
         }
@@ -228,12 +244,12 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        _calculateTop(targetTop, verticalCenterOffset) {
+        _calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset) {
           switch (this.align) {
             case 'top':
               return targetTop;
             case 'bottom':
-              return targetTop;
+              return targetTop + targetRect.height - thisRect.height;
             default:
               return targetTop + verticalCenterOffset;
           }
