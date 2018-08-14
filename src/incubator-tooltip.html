@@ -178,16 +178,10 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           if (!this.isAttached) {
             return;
           }
-          // offsetParent is null for self closing tags.
-          let parentRectTop = 0,
-            parentRectLeft = 0,
-            parentRectHeight = 0;
-          if (this.offsetParent) {
-            const parentBoundingRect = this.offsetParent.getBoundingClientRect();
-            parentRectTop = parentBoundingRect.top;
-            parentRectLeft = parentBoundingRect.left;
-            parentRectHeight = parentBoundingRect.height;
-          }
+          const parentRect = this.offsetParent.getBoundingClientRect();
+          const parentRectTop = parentRect.top;
+          const parentRectLeft = parentRect.left;
+          const parentRectHeight = parentRect.height;
           const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left;
@@ -215,6 +209,10 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
           }
 
+          this._setPositionInVisibleBounds(parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect);
+        }
+
+        _setPositionInVisibleBounds(parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect) {
           // Check and fix horizontal position
           if (parentRectLeft + tooltipLeft + thisRect.width > window.innerWidth) {
             this.style.right = '0px';
