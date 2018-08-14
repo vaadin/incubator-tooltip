@@ -14,6 +14,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
   <template>
     <style>
       :host {
+        box-sizing: border-box;
+        padding: 0;
         display: block;
         position: absolute;
         outline: none;
@@ -25,8 +27,17 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         cursor: default;
       }
 
+      [part="content"] {
+        box-sizing: border-box;
+        width: 100%;
+      }
+
       :host([hidden]) [part="content"] {
         display: none !important;
+      }
+
+      :host ::slotted(*) {
+        box-sizing: border-box;
       }
     </style>
 
@@ -108,11 +119,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
             _targetElement: {
               type: Object
-            },
-
-            _replacedInDom: {
-              type: Boolean,
-              value: false
             }
           };
         }
@@ -133,12 +139,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         connectedCallback() {
           if (!this._targetElement) {
             this._targetElement = this.parentNode.querySelector(`#${this.for}`);
-          }
-          if (this._targetElement && !this.isAttached) {
             this.isAttached = true;
-            this._targetElement.appendChild(this);
           }
-
           this._attachToTarget();
           super.connectedCallback();
         }
@@ -160,11 +162,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.addEventListener('blur', this._boundHide);
             this._targetElement.addEventListener('tap', this._boundHide);
           }
-
-          if (!this.manual && !this._replacedInDom) {
-            this.addEventListener('mouseenter', this._boundShow);
-            this.addEventListener('mouseleave', this._boundHide);
-          }
         }
 
         _detachFromTarget() {
@@ -174,11 +171,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.removeEventListener('mouseleave', this._boundHide);
             this._targetElement.removeEventListener('blur', this._boundHide);
             this._targetElement.removeEventListener('tap', this._boundHide);
-          }
-
-          if (!this.manual && !this._replacedInDom) {
-            this.removeEventListener('mouseenter', this._boundShow);
-            this.removeEventListener('mouseleave', this._boundHide);
           }
         }
 
@@ -198,7 +190,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
           const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
-          const targetLeft = targetRect.left - parentRectLeft;
+          const targetLeft = targetRect.left;
           const targetTop = targetRect.top - parentRectTop;
           const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
           const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
@@ -215,11 +207,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
             case 'left':
               tooltipLeft = targetLeft - thisRect.width;
-              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
+              tooltipTop = this._calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset);
               break;
             case 'right':
               tooltipLeft = targetLeft + targetRect.width;
-              tooltipTop = this._calculateTop(targetTop, verticalCenterOffset);
+              tooltipTop = this._calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset);
               break;
           }
 
@@ -252,12 +244,12 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        _calculateTop(targetTop, verticalCenterOffset) {
+        _calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset) {
           switch (this.align) {
             case 'top':
               return targetTop;
             case 'bottom':
-              return targetTop;
+              return targetTop + targetRect.height - thisRect.height;
             default:
               return targetTop + verticalCenterOffset;
           }

@@ -12,7 +12,7 @@
         <h1 id="to-be-tooltiped">
           This is a test title with tooltip.
         </h1>
-        <incubator-tooltip id="my-tooltip" for="to-be-tooltiped" position="left" align="center">
+        <incubator-tooltip for="to-be-tooltiped" position="top">
           Some descriptive text about this title.
         </incubator-tooltip>
       </template>
@@ -21,10 +21,27 @@
     <h3>Rich</h3>
     <vaadin-demo-snippet id="incubator-tooltip-demo-sample-2">
       <template preserve-content>
-        <input type="text" id="to-be-tooltiped"/>
-        <incubator-tooltip id="my-tooltip" for="to-be-tooltiped" position="right" align="bottom">
-          <h2>This a header inside the tooltip</h2>
-          <em>And this text is emphasized.</em>
+        <style>
+          [part="tooltip-title"],
+          [part="tooltip-description"] {
+            text-align: left;
+            padding: 5px;
+            width: 100%;
+          }
+
+          [part="tooltip-title"] {
+            border-radius: 5px;
+            background: var(--lumo-shade)
+          }
+        </style>
+        <input type="text" id="to-be-tooltiped" />
+        <incubator-tooltip for="to-be-tooltiped" position="right" align="top">
+          <div part="tooltip-title">
+            Edit
+          </div>
+          <div part="tooltip-description">
+            By pressing this button you are entitled to edit any element on the page.
+          </div>
         </incubator-tooltip>
       </template>
     </vaadin-demo-snippet>
@@ -35,12 +52,12 @@
         <vaadin-button id="demo-btn">
           Tooltip will be shown after clicking on this
         </vaadin-button>
-        <incubator-tooltip id="my-tooltip" for="demo-btn" position="top" manual>
+        <incubator-tooltip id="my-tooltip" for="demo-btn" position="right" align="bottom" manual>
           A tooltip to remember.
         </incubator-tooltip>
       </template>
       <script>
-        window.addDemoReadyListener('#incubator-tooltip-demo-sample-3', function(document) {
+        window.addDemoReadyListener('#incubator-tooltip-demo-sample-3', function (document) {
           const tooltipElement = document.querySelector('#my-tooltip');
           const btn = document.querySelector('#demo-btn');
           btn.addEventListener('click', () => {
