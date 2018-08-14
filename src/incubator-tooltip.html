@@ -36,7 +36,9 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
   </template>
 
   <script>
-    {
+    (function() {
+      'use strict';
+
       /**
        * `<incubator-tooltip>` is a template for incubator components.
        *
@@ -125,11 +127,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         connectedCallback() {
           if (!this._targetElement) {
-            this._targetElement = Polymer.dom(this).parentNode.querySelector(`#${this.for}`);
+            this._targetElement = this.parentNode.querySelector(`#${this.for}`);
           }
           if (this._targetElement && !this.isAttached) {
             this.isAttached = true;
-            Polymer.dom(this._targetElement).appendChild(this);
+            this._targetElement.appendChild(this);
           }
 
           this._attachToTarget();
@@ -257,6 +259,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       if (window.Vaadin.runIfDevelopmentMode) {
         window.Vaadin.runIfDevelopmentMode('vaadin-license-checker', IncubatorTooltip);
       }
-    }
+    })();
   </script>
 </dom-module>
