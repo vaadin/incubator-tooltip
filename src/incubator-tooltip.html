@@ -162,6 +162,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.addEventListener('blur', this._boundHide);
             this._targetElement.addEventListener('tap', this._boundHide);
           }
+
+          if (!this.manual) {
+            this.addEventListener('mouseenter', this._boundShow);
+            this.addEventListener('mouseleave', this._boundHide);
+          }
         }
 
         _detachFromTarget() {
@@ -171,6 +176,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this._targetElement.removeEventListener('mouseleave', this._boundHide);
             this._targetElement.removeEventListener('blur', this._boundHide);
             this._targetElement.removeEventListener('tap', this._boundHide);
+          }
+
+          if (!this.manual) {
+            this.removeEventListener('mouseenter', this._boundShow);
+            this.removeEventListener('mouseleave', this._boundHide);
           }
         }
 
@@ -185,7 +195,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           const targetRect = this._targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left;
-          const targetTop = targetRect.top - parentRectTop;
+          const targetTop = targetRect.top;
           const horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
           const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
           let tooltipLeft, tooltipTop;
