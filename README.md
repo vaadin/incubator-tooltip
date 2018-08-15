@@ -14,10 +14,9 @@
   <incubator-tooltip for="element-id" position="top">
     A short text describing the element.
   </incubator-tooltip>
-```incubator-tooltip
+```
 
 [<img src="https://raw.githubusercontent.com/vaadin/incubator-tooltip/master/screenshot.png" width="200" alt="Screenshot of incubator-tooltip">](https://vaadin.com/components/incubator-tooltip)
-incubator-tooltipincubator-tooltipincubator-tooltip
 
 ## Installation
 
@@ -34,13 +33,13 @@ Install `incubator-tooltip`:
 incubator-tooltip
 ```sh
 bower i vaadin/incubator-tooltip --save
-```incubator-tooltip
+```
 
 Once installed, import it in your application:
 
 ```html
 <link rel="import" href="bower_components/incubator-tooltip/incubator-tooltip.html">
-```incubator-tooltipincubator-tooltip
+```
 ### Polymer 3 and ES Modules compatible version
 
 
@@ -48,13 +47,13 @@ Install `incubator-tooltip`:
 incubator-tooltip
 ```sh
 npm i @vaadin/incubator-tooltip --save
-```incubator-tooltip
+```
 
 Once installed, import it in your application:
 
 ```js
 import '@vaadin/incubator-tooltip/incubator-tooltip.js';
-```incubator-tooltipincubator-tooltip
+```
 
 ## Getting Started
 
