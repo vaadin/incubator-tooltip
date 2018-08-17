@@ -3,12 +3,10 @@
 
 # &lt;incubator-tooltip&gt;
 
-[Live Demo ↗](https://vaadin.com/components/incubator-tooltip/html-examples)
-|
-[API documentation ↗](https://vaadin.com/components/incubator-tooltip/html-api)
+[Live Demo ↗](https://incubator.app.fi/incubator-tooltip-demo/)
 
 
-[&lt;incubator-tooltip&gt;](https://vaadin.com/components/incubator-tooltip) is a Web Component providing an easy way to display tooltips on any html element, part of the [Vaadin components](https://vaadin.com/components).
+[&lt;incubator-tooltip&gt;](https://vaadin.com/directory/component/vaadinincubator-tooltip) is a Web Component providing an easy way to display tooltips on any html element.
 
 ```html
   <incubator-tooltip for="element-id" position="top">
