@@ -202,11 +202,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
           switch (this.position) {
             case 'top':
-              tooltipTop = targetTop - thisRect.height + window.scrollY;
+              tooltipTop = targetTop - thisRect.height + window.pageYOffset;
               tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'bottom':
-              tooltipTop = targetTop + targetRect.height + window.scrollY;
+              tooltipTop = targetTop + targetRect.height + window.pageYOffset;
               tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'left':
@@ -255,11 +255,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         _calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset) {
           switch (this.align) {
             case 'top':
-              return targetTop + window.scrollY;
+              return targetTop + window.pageYOffset;
             case 'bottom':
-              return targetTop + targetRect.height - thisRect.height + window.scrollY;
+              return targetTop + targetRect.height - thisRect.height + window.pageYOffset;
             default:
-              return targetTop + verticalCenterOffset + window.scrollY;
+              return targetTop + verticalCenterOffset + window.pageYOffset;
           }
         }
 
