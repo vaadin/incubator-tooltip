@@ -112,7 +112,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         static get observers() {
           return [
-            '_setPosition(position, align, isAttached)',
+            '_setPosition(isAttached, hidden, position, align)',
             '_attachToTarget(for, isAttached)'
           ]
         }
@@ -165,8 +165,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        _setPosition() {
-          if (!this.isAttached) {
+        _setPosition(isAttached, hidden, position) {
+          if (!isAttached || hidden) {
             return;
           }
           const parentRect = this.offsetParent.getBoundingClientRect();
@@ -178,7 +178,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           const verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
           let tooltipLeft, tooltipTop;
 
-          switch (this.position) {
+          switch (position) {
             case 'top':
               tooltipTop = targetTop - thisRect.height;
               tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
@@ -237,9 +237,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        show(e) {
+        show() {
           this.hidden = false;
-          this._setPosition();
         }
 
         hide() {
