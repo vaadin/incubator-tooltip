@@ -126,8 +126,9 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         static get observers() {
           return [
             '_setPosition(isAttached, hidden, position, align)',
-            '_attachToTarget(for, isAttached)'
-          ]
+            '_attachToTarget(for, isAttached)',
+            '_manualObserver(manual)'
+          ];
         }
 
         constructor() {
@@ -150,11 +151,22 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           this._detachFromTarget();
         }
 
+        _manualObserver() {
+          if (this.manual) {
+            this._removeEvents();
+          } else {
+            this._addEvents();
+          }
+        }
+
         _attachToTarget() {
           if (!this.isAttached) {
             return;
           }
-
+          this._addEvents();
+        }
+        
+        _addEvents() {
           if (this._targetElement && !this.manual) {
             this._targetElement.addEventListener('mouseenter', this._boundShow);
             this._targetElement.addEventListener('focus', this._boundShow);
@@ -170,18 +182,21 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _detachFromTarget() {
-          if (this._targetElement && !this.manual) {
+          if (!this.manual) {
+            this._removeEvents();
+          }
+        }
+
+        _removeEvents() {
+          if (this._targetElement) {
             this._targetElement.removeEventListener('mouseenter', this._boundShow);
             this._targetElement.removeEventListener('focus', this._boundShow);
             this._targetElement.removeEventListener('mouseleave', this._boundHide);
             this._targetElement.removeEventListener('blur', this._boundHide);
             this._targetElement.removeEventListener('tap', this._boundHide);
           }
-
-          if (!this.manual) {
-            this.removeEventListener('mouseenter', this._boundShow);
-            this.removeEventListener('mouseleave', this._boundHide);
-          }
+          this.removeEventListener('mouseenter', this._boundShow);
+          this.removeEventListener('mouseleave', this._boundHide);
         }
 
         _setPosition(isAttached, hidden, position) {
@@ -219,10 +234,10 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
           }
 
-          this._setPositionInVisibleBounds(parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect);
+          this._setPositionInVisibleBounds(parentRectHeight, parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect);
         }
 
-        _setPositionInVisibleBounds(parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect) {
+        _setPositionInVisibleBounds(parentRectHeight, parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect) {
           // Check and fix horizontal position
           if (parentRectLeft + tooltipLeft + thisRect.width > window.innerWidth) {
             this.style.right = '0px';
