@@ -71,6 +71,73 @@
       </script>
     </vaadin-demo-snippet>
 
+    <h3>Dynamic tooltip modifying "for" property</h3>
+    <p>
+      When the "Change Tooltip" button is clicked, the tooltip changes
+      from one button to the other one. Before clicking on the button the
+      tooltip is not set. 
+     </p>
+    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-4">
+      <template preserve-content>
+        <vaadin-button id="demo-btn1">
+          Button 1
+        </vaadin-button>
+        <vaadin-button id="demo-btn2">
+          Button 2
+        </vaadin-button>
+        <vaadin-button id="action-button">
+          Change Tooltip
+        </vaadin-button>
+        <incubator-tooltip id="my-tooltip" position="right" align="bottom">
+          A tooltip to remember.
+        </incubator-tooltip>
+      </template>
+      <script>
+        window.addDemoReadyListener('#incubator-tooltip-demo-sample-4', function (document) {
+          const tooltipElement = document.querySelector('#my-tooltip');
+          const btn = document.querySelector('#action-button');
+          let i = 1;
+          btn.addEventListener('click', () => {
+              tooltipElement.for = "demo-btn" + i;
+              i = ( i == 1) ? 2 : 1;
+          });
+        });
+      </script>
+    </vaadin-demo-snippet>
+
+    <h3>Dynamic tooltip modifying targetElement property</h3>
+    <p>
+     When the "Change Tooltip" button is clicked, the tooltip changes
+     from one button to the other one. Before clicking on the button the
+     tooltip is not set. 
+    </p>
+    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-5">
+      <template preserve-content>
+        <vaadin-button id="demo-btn1">
+          Button 1
+        </vaadin-button>
+        <vaadin-button id="demo-btn2">
+          Button 2
+        </vaadin-button>
+        <vaadin-button id="action-button">
+          Change Tooltip
+        </vaadin-button>
+        <incubator-tooltip id="my-tooltip" position="right" align="bottom">
+          A tooltip to remember.
+        </incubator-tooltip>
+      </template>
+      <script>
+        window.addDemoReadyListener('#incubator-tooltip-demo-sample-5', function (document) {
+          const tooltipElement = document.querySelector('#my-tooltip');
+          const btn = document.querySelector('#action-button');
+          let i = 1;
+          btn.addEventListener('click', () => {
+              tooltipElement.targetElement = document.querySelector('#demo-btn' + i);
+              i = ( i == 1) ? 2 : 1;
+          });
+        });
+      </script>
+    </vaadin-demo-snippet>
   </template>
   <script>
     class VaadinTooltipBasicDemos extends DemoReadyEventEmitter(ElementDemo(Polymer.Element)) {

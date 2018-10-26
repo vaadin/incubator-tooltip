@@ -110,23 +110,19 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             },
 
             /**
-             * If the element is mounted to the DOM.
+             * The tooltip is attached to this element.
              */
-            isAttached: {
-              type: Boolean,
-              value: false
-            },
-
-            _targetElement: {
-              type: Object
+            targetElement: {
+              type: Object,
+              observer: '_attachToTarget'
             }
           };
         }
 
         static get observers() {
           return [
-            '_setPosition(isAttached, hidden, position, align)',
-            '_attachToTarget(for, isAttached)',
+            '_setPosition(targetElement, hidden, position, align)',
+            '_updateTarget(for)',
             '_manualObserver(manual)'
           ];
         }
@@ -138,10 +134,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         connectedCallback() {
-          if (!this._targetElement) {
-            this._targetElement = this.parentNode.querySelector(`#${this.for}`);
-            this.isAttached = true;
-          }
           this._attachToTarget();
           super.connectedCallback();
         }
@@ -159,20 +151,23 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        _attachToTarget() {
-          if (!this.isAttached) {
+        _attachToTarget(newValue,oldValue) {
+          if (oldValue) {
+            this._removeTargetEvents(oldValue);
+          }
+          if (!this.targetElement) {
             return;
           }
           this._addEvents();
         }
         
         _addEvents() {
-          if (this._targetElement && !this.manual) {
-            this._targetElement.addEventListener('mouseenter', this._boundShow);
-            this._targetElement.addEventListener('focus', this._boundShow);
-            this._targetElement.addEventListener('mouseleave', this._boundHide);
-            this._targetElement.addEventListener('blur', this._boundHide);
-            this._targetElement.addEventListener('tap', this._boundHide);
+          if (this.targetElement && !this.manual) {
+            this.targetElement.addEventListener('mouseenter', this._boundShow);
+            this.targetElement.addEventListener('focus', this._boundShow);
+            this.targetElement.addEventListener('mouseleave', this._boundHide);
+            this.targetElement.addEventListener('blur', this._boundHide);
+            this.targetElement.addEventListener('tap', this._boundHide);
           }
 
           if (!this.manual) {
@@ -188,26 +183,34 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         }
 
         _removeEvents() {
-          if (this._targetElement) {
-            this._targetElement.removeEventListener('mouseenter', this._boundShow);
-            this._targetElement.removeEventListener('focus', this._boundShow);
-            this._targetElement.removeEventListener('mouseleave', this._boundHide);
-            this._targetElement.removeEventListener('blur', this._boundHide);
-            this._targetElement.removeEventListener('tap', this._boundHide);
+          if (this.targetElement) {
+            this._removeTargetEvents(this.targetElement);
           }
           this.removeEventListener('mouseenter', this._boundShow);
           this.removeEventListener('mouseleave', this._boundHide);
         }
 
-        _setPosition(isAttached, hidden, position) {
-          if (!isAttached || hidden) {
+        _removeTargetEvents(target) {
+          target.removeEventListener('mouseenter', this._boundShow);
+          target.removeEventListener('focus', this._boundShow);
+          target.removeEventListener('mouseleave', this._boundHide);
+          target.removeEventListener('blur', this._boundHide);
+          target.removeEventListener('tap', this._boundHide);
+        }
+        
+        _updateTarget(){
+          this.targetElement = this.parentNode.querySelector(`#${this.for}`);
+        }
+
+        _setPosition(targetElement, hidden, position) {
+          if (!targetElement|| hidden) {
             return;
           }
           const parentRect = this.offsetParent.getBoundingClientRect();
           const parentRectTop = parentRect.top;
           const parentRectLeft = parentRect.left;
           const parentRectHeight = parentRect.height;
-          const targetRect = this._targetElement.getBoundingClientRect();
+          const targetRect = this.targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left;
           const targetTop = targetRect.top;
