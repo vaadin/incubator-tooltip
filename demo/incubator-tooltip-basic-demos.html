@@ -9,135 +9,23 @@
     <h3>Simple demo</h3>
     <vaadin-demo-snippet id="incubator-tooltip-demo-sample-1">
       <template preserve-content>
-        <h1 id="to-be-tooltiped">
-          This is a test title with tooltip.
-        </h1>
-        <incubator-tooltip for="to-be-tooltiped" position="top">
+        <vaadin-tabs>
+          <vaadin-tab id="tab1">Tab one</vaadin-tab>
+          <vaadin-tab id="tab2">Tab two</vaadin-tab>
+          <vaadin-tab id="tab3">Tab three</vaadin-tab>          
+        </vaadin-tabs>
+        <incubator-tooltip for="tab1" position="top">
+          Some descriptive text about this title.
+        </incubator-tooltip>
+        <incubator-tooltip for="tab2" position="bottom">
+          Some descriptive text about this title.
+        </incubator-tooltip>
+        <incubator-tooltip for="tab3" position="right">
           Some descriptive text about this title.
         </incubator-tooltip>
       </template>
     </vaadin-demo-snippet>
 
-    <h3>Rich</h3>
-    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-2">
-      <template preserve-content>
-        <style>
-          [part="tooltip-title"],
-          [part="tooltip-description"] {
-            text-align: left;
-            padding: 5px;
-            width: 100%;
-          }
-
-          [part="tooltip-title"] {
-            border-radius: 5px;
-            background: var(--lumo-shade)
-          }
-        </style>
-        <input type="text" id="to-be-tooltiped" />
-        <incubator-tooltip for="to-be-tooltiped" position="right" align="top">
-          <div part="tooltip-title">
-            Edit
-          </div>
-          <div part="tooltip-description">
-            By pressing this button you are entitled to edit any element on the page.
-          </div>
-        </incubator-tooltip>
-      </template>
-    </vaadin-demo-snippet>
-
-    <h3>Manual Mode</h3>
-    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-3">
-      <template preserve-content>
-        <vaadin-button id="demo-btn">
-          Tooltip will be shown after clicking on this
-        </vaadin-button>
-        <incubator-tooltip id="my-tooltip" for="demo-btn" position="right" align="bottom" manual>
-          A tooltip to remember.
-        </incubator-tooltip>
-      </template>
-      <script>
-        window.addDemoReadyListener('#incubator-tooltip-demo-sample-3', function (document) {
-          const tooltipElement = document.querySelector('#my-tooltip');
-          const btn = document.querySelector('#demo-btn');
-          btn.addEventListener('click', () => {
-            if (tooltipElement.hidden) {
-              tooltipElement.show();
-            } else {
-              tooltipElement.hide();
-            }
-          });          
-        });
-      </script>
-    </vaadin-demo-snippet>
-
-    <h3>Dynamic tooltip modifying "for" property</h3>
-    <p>
-      When the "Change Tooltip" button is clicked, the tooltip changes
-      from one button to the other one. Before clicking on the button the
-      tooltip is not set. 
-     </p>
-    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-4">
-      <template preserve-content>
-        <vaadin-button id="demo-btn1">
-          Button 1
-        </vaadin-button>
-        <vaadin-button id="demo-btn2">
-          Button 2
-        </vaadin-button>
-        <vaadin-button id="action-button">
-          Change Tooltip
-        </vaadin-button>
-        <incubator-tooltip id="my-tooltip" position="right" align="bottom">
-          A tooltip to remember.
-        </incubator-tooltip>
-      </template>
-      <script>
-        window.addDemoReadyListener('#incubator-tooltip-demo-sample-4', function (document) {
-          const tooltipElement = document.querySelector('#my-tooltip');
-          const btn = document.querySelector('#action-button');
-          let i = 1;
-          btn.addEventListener('click', () => {
-              tooltipElement.for = "demo-btn" + i;
-              i = ( i == 1) ? 2 : 1;
-          });
-        });
-      </script>
-    </vaadin-demo-snippet>
-
-    <h3>Dynamic tooltip modifying targetElement property</h3>
-    <p>
-     When the "Change Tooltip" button is clicked, the tooltip changes
-     from one button to the other one. Before clicking on the button the
-     tooltip is not set. 
-    </p>
-    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-5">
-      <template preserve-content>
-        <vaadin-button id="demo-btn1">
-          Button 1
-        </vaadin-button>
-        <vaadin-button id="demo-btn2">
-          Button 2
-        </vaadin-button>
-        <vaadin-button id="action-button">
-          Change Tooltip
-        </vaadin-button>
-        <incubator-tooltip id="my-tooltip" position="right" align="bottom">
-          A tooltip to remember.
-        </incubator-tooltip>
-      </template>
-      <script>
-        window.addDemoReadyListener('#incubator-tooltip-demo-sample-5', function (document) {
-          const tooltipElement = document.querySelector('#my-tooltip');
-          const btn = document.querySelector('#action-button');
-          let i = 1;
-          btn.addEventListener('click', () => {
-              tooltipElement.targetElement = document.querySelector('#demo-btn' + i);
-              i = ( i == 1) ? 2 : 1;
-          });
-        });
-      </script>
-    </vaadin-demo-snippet>
   </template>
   <script>
     class VaadinTooltipBasicDemos extends DemoReadyEventEmitter(ElementDemo(Polymer.Element)) {

@@ -37,6 +37,7 @@
     "test-fixture": "^3.0.0",
     "vaadin-demo-helpers": "vaadin/vaadin-demo-helpers#^1.0.0",
     "vaadin-icons": "vaadin/vaadin-icons#^4.1.4",
-    "vaadin-button": "^2.1.0"
+    "vaadin-button": "^2.1.0",
+    "vaadin-tabs": "latest"
   }
 }
