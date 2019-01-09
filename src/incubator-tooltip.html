@@ -17,7 +17,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         box-sizing: border-box;
         padding: 0;
         display: block;
-        position: absolute;
+        position: fixed;
         outline: none;
         z-index: 1000;
         -moz-user-select: none;
@@ -206,7 +206,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           if (!targetElement|| hidden) {
             return;
           }
-          this.style.position = 'absolute';
+
+          console.log(targetElement.textNode + ", " + hidden + ", " + position);
 
           const targetRect = this.targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
@@ -255,8 +256,6 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this.style.top = Math.max(-parentRectTop, tooltipTop) + 'px';
             this.style.bottom = 'auto';
           }
-
-          this.style.position = 'fixed';
         }
 
         _calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset) {
@@ -283,11 +282,24 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
         show() {
           this.hidden = false;
+          this.repositionListener = event => {
+            const targetRect = this.targetElement.getBoundingClientRect();
+            if (targetRect.bottom < 0 || targetRect.top > window.innerHeight || targetRect.right < 0 || targetRect.left > window.innerWidth) {
+              this.hide();
+            } else {
+              this._setPosition(this.targetElement, this.hidden, this.position);
+            }
+          }
+          window.addEventListener('scroll', this.repositionListener);
+          window.addEventListener('resize', this.repositionListener);
         }
 
         hide() {
           this.hidden = true;
+          window.removeEventListener('scroll', this.repositionListener);
+          window.removeEventListener('resize', this.repositionListener);
         }
+
       }
 
       customElements.define(IncubatorTooltip.is, IncubatorTooltip);
