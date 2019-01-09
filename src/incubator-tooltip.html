@@ -257,6 +257,8 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this.style.top = Math.max(-parentRectTop, tooltipTop) + 'px';
             this.style.bottom = 'auto';
           }
+
+          this.style.position = 'fixed';
         }
 
         _calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset) {
