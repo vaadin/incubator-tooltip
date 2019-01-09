@@ -151,7 +151,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        _attachToTarget(newValue,oldValue) {
+        _attachToTarget(newValue, oldValue) {
           if (oldValue) {
             this._removeTargetEvents(oldValue);
           }
@@ -160,7 +160,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
           this._addEvents();
         }
-        
+
         _addEvents() {
           if (this.targetElement && !this.manual) {
             this.targetElement.addEventListener('mouseenter', this._boundShow);
@@ -197,17 +197,15 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           target.removeEventListener('blur', this._boundHide);
           target.removeEventListener('tap', this._boundHide);
         }
-        
-        _updateTarget(){
+    
+        _updateTarget() {
           this.targetElement = this.parentNode.querySelector(`#${this.for}`);
         }
 
         _setPosition(targetElement, hidden, position) {
-          if (!targetElement|| hidden) {
+          if (!targetElement || hidden) {
             return;
           }
-
-          console.log(targetElement.textNode + ", " + hidden + ", " + position);
 
           const targetRect = this.targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
@@ -289,7 +287,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             } else {
               this._setPosition(this.targetElement, this.hidden, this.position);
             }
-          }
+          };
           window.addEventListener('scroll', this.repositionListener);
           window.addEventListener('resize', this.repositionListener);
         }
