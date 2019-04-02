@@ -10,6 +10,16 @@
       "description": "",
       "image": ""
      }
+  },
+  {
+    "name": "Delay",
+    "url": "incubator-tooltip-delay",
+    "src": "incubator-tooltip-delay.html",
+    "meta": {
+      "title": "incubator-tooltip Delay",
+      "description": "",
+      "image": ""
+     }
   }
   ]
 }

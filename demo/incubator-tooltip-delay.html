@@ -1,0 +1,30 @@
+<dom-module id="incubator-tooltip-delay">
+  <template>
+    <style include="vaadin-component-demo-shared-styles">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <h3>Show with delay</h3>
+    <vaadin-demo-snippet id="incubator-tooltip-demo-sample-1">
+      <template preserve-content>
+        <h1 id="to-be-tooltiped">
+          This is a test title with tooltip.
+        </h1>
+        <incubator-tooltip for="to-be-tooltiped" position="top" delay="600">
+          Some descriptive text about this title.
+        </incubator-tooltip>
+      </template>
+    </vaadin-demo-snippet>
+  </template>
+
+  <script>
+    class VaadinTooltipDelay extends DemoReadyEventEmitter(ElementDemo(Polymer.Element)) {
+      static get is() {
+        return 'incubator-tooltip-delay';
+      }
+    }
+    customElements.define(VaadinTooltipDelay.is, VaadinTooltipDelay);
+  </script>
+</dom-module>
