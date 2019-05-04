@@ -10,6 +10,16 @@
       "description": "",
       "image": ""
      }
+  },
+  {
+    "name": "Theme Variants",
+    "url": "incubator-tooltip-theme-variants",
+    "src": "incubator-tooltip-theme-variants.html",
+    "meta": {
+      "title": "incubator-tooltip Theme Variants",
+      "description": "",
+      "image": ""
+     }
   }
   ]
 }

@@ -41,7 +41,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
       }
     </style>
 
-    <div part="content" theme="dark">
+    <div part="content" theme$="[[theme]]">
       <slot></slot>
     </div>
   </template>
@@ -115,6 +115,15 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             targetElement: {
               type: Object,
               observer: '_attachToTarget'
+            },
+
+            /**
+             * The theme variant to use for the tooltip.
+             */
+            theme: {
+              type: String,
+              value: 'dark',
+              reflectToAttribute: true
             }
           };
         }
@@ -160,7 +169,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
           this._addEvents();
         }
-        
+
         _addEvents() {
           if (this.targetElement && !this.manual) {
             this.targetElement.addEventListener('mouseenter', this._boundShow);
@@ -197,7 +206,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           target.removeEventListener('blur', this._boundHide);
           target.removeEventListener('tap', this._boundHide);
         }
-        
+
         _updateTarget(){
           this.targetElement = this.parentNode.querySelector(`#${this.for}`);
         }
