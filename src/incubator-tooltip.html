@@ -17,7 +17,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         box-sizing: border-box;
         padding: 0;
         display: block;
-        position: absolute;
+        position: fixed;
         outline: none;
         z-index: 1000;
         -moz-user-select: none;
@@ -151,7 +151,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
         }
 
-        _attachToTarget(newValue,oldValue) {
+        _attachToTarget(newValue, oldValue) {
           if (oldValue) {
             this._removeTargetEvents(oldValue);
           }
@@ -160,7 +160,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           }
           this._addEvents();
         }
-        
+
         _addEvents() {
           if (this.targetElement && !this.manual) {
             this.targetElement.addEventListener('mouseenter', this._boundShow);
@@ -197,19 +197,16 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
           target.removeEventListener('blur', this._boundHide);
           target.removeEventListener('tap', this._boundHide);
         }
-        
-        _updateTarget(){
+    
+        _updateTarget() {
           this.targetElement = this.parentNode.querySelector(`#${this.for}`);
         }
 
         _setPosition(targetElement, hidden, position) {
-          if (!targetElement|| hidden) {
+          if (!targetElement || hidden) {
             return;
           }
-          const parentRect = this.offsetParent.getBoundingClientRect();
-          const parentRectTop = parentRect.top;
-          const parentRectLeft = parentRect.left;
-          const parentRectHeight = parentRect.height;
+
           const targetRect = this.targetElement.getBoundingClientRect();
           const thisRect = this.getBoundingClientRect();
           const targetLeft = targetRect.left;
@@ -220,11 +217,11 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
 
           switch (position) {
             case 'top':
-              tooltipTop = targetTop - thisRect.height + window.pageYOffset;
+              tooltipTop = targetTop - thisRect.height;
               tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'bottom':
-              tooltipTop = targetTop + targetRect.height + window.pageYOffset;
+              tooltipTop = targetTop + thisRect.height;
               tooltipLeft = this._calculateLeft(targetLeft, targetRect, thisRect, horizontalCenterOffset);
               break;
             case 'left':
@@ -237,12 +234,12 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
               break;
           }
 
-          this._setPositionInVisibleBounds(parentRectHeight, parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect);
+          this._setPositionInVisibleBounds(targetRect.height, targetLeft, targetTop, tooltipLeft, tooltipTop, thisRect);
         }
 
         _setPositionInVisibleBounds(parentRectHeight, parentRectLeft, parentRectTop, tooltipLeft, tooltipTop, thisRect) {
           // Check and fix horizontal position
-          if (parentRectLeft + tooltipLeft + thisRect.width > window.innerWidth) {
+          if (tooltipLeft + thisRect.width > window.innerWidth) {
             this.style.right = '0px';
             this.style.left = 'auto';
           } else {
@@ -250,7 +247,7 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
             this.style.right = 'auto';
           }
           // Check and fix vertical position
-          if (parentRectTop + tooltipTop + thisRect.height > window.innerHeight) {
+          if (tooltipTop + thisRect.height > window.innerHeight) {
             this.style.bottom = parentRectHeight + 'px';
             this.style.top = 'auto';
           } else {
@@ -273,21 +270,34 @@ See <a href="https://vaadin.com/license/cval-3">the website</a> for the complete
         _calculateTop(targetTop, targetRect, thisRect, verticalCenterOffset) {
           switch (this.align) {
             case 'top':
-              return targetTop + window.pageYOffset;
+              return targetTop;
             case 'bottom':
-              return targetTop + targetRect.height - thisRect.height + window.pageYOffset;
+              return targetTop + targetRect.height - thisRect.height;
             default:
-              return targetTop + verticalCenterOffset + window.pageYOffset;
+              return targetTop + verticalCenterOffset;
           }
         }
 
         show() {
           this.hidden = false;
+          this.repositionListener = event => {
+            const targetRect = this.targetElement.getBoundingClientRect();
+            if (targetRect.bottom < 0 || targetRect.top > window.innerHeight || targetRect.right < 0 || targetRect.left > window.innerWidth) {
+              this.hide();
+            } else {
+              this._setPosition(this.targetElement, this.hidden, this.position);
+            }
+          };
+          window.addEventListener('scroll', this.repositionListener);
+          window.addEventListener('resize', this.repositionListener);
         }
 
         hide() {
           this.hidden = true;
+          window.removeEventListener('scroll', this.repositionListener);
+          window.removeEventListener('resize', this.repositionListener);
         }
+
       }
 
       customElements.define(IncubatorTooltip.is, IncubatorTooltip);
